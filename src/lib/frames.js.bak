@@ -1,0 +1,10 @@
+// Bingkai bawaan digambar lewat kode (lihat compose.js). Bingkai gambar milikmu tersimpan di browser.
+export const FRAMES=[
+{id:"after-school",name:"After School Date",cat:"Sekolah",slots:2,bg:"#f6f0e1"},
+{id:"good-mood",name:"Good Mood",cat:"Cute",slots:2,bg:"#2347b5"},
+{id:"bestie",name:"Bestie Time",cat:"Persahabatan",slots:3,bg:"#f6a6c9"},
+{id:"fan-event",name:"Fan Event",cat:"Seasonal",slots:1,bg:"#1c2f86"},
+{id:"minimalis",name:"Minimalis",cat:"Minimalis",slots:3,bg:"#fbf7ee"},
+{id:"retro",name:"Retro Film",cat:"Retro",slots:4,bg:"#171717"},
+];
+export const CATS=["Semua",...new Set(FRAMES.map(f=>f.cat))];
