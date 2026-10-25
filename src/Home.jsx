@@ -1,5 +1,6 @@
 import {useEffect,useState} from "react";
 import {motion} from "framer-motion";
+import I from "./Icon.jsx";
 import {FRAMES} from "./lib/frames";
 import {buildFrame} from "./lib/detect";
 import {compose} from "./lib/compose";
@@ -19,7 +20,7 @@ const Strip=({bg,pat,n,label,rot,w,ph,o})=>(
   <div className="mt-2 space-y-2">{Array.from({length:n}).map((_,i)=><img key={i} src={ph(o+i)} alt="" className="aspect-[4/3] w-full rounded border-2 border-ink object-cover"/>)}</div>
   <div className="paper -rotate-3 mx-1 mt-2 border-2 border-ink py-1 text-center font-display text-sm">{label}</div>
  </motion.div>);
-const STEPS=[["📷","Ambil / unggah foto","Pakai kamera atau pilih dari galeri."],["🖼","Pilih bingkai","Ganti bingkai kapan saja, fotomu tetap aman."],["⬇","Unduh hasil","Simpan sebagai PNG atau JPEG."]];
+const STEPS=[["camera","Ambil / unggah foto","Pakai kamera atau pilih dari galeri."],["image","Pilih bingkai","Ganti bingkai kapan saja, fotomu tetap aman."],["download","Unduh hasil","Simpan sebagai PNG atau JPEG."]];
 
 export default function Home(){
  const [demo,setDemo]=useState(()=>rd("pb_demo")),[frames,setFrames]=useState(()=>rd("pb_frames")),[prev,setPrev]=useState({}),[msg,setMsg]=useState(""),[busy,setBusy]=useState(false);
@@ -46,10 +47,10 @@ export default function Home(){
      <span className="burst absolute -left-1 -top-3 h-14 w-24 bg-pb" aria-hidden="true"/>
      <span className="relative block font-display text-2xl leading-6 text-white [-webkit-text-stroke:2px_#14267a]">PHOTOBOOTH<br/><span className="ml-4">CLUB</span></span></a>
     <nav aria-label="Menu utama" className="hidden gap-2 md:flex">
-     <a aria-current="page" href="#/" className={nav+"border-b-4 border-pb"}>🏠 Beranda</a>
-     <a href="#/" onClick={go("vibe")} className={nav}>▦ Pilih Bingkai</a>
-     <a href="#/" onClick={go("cara")} className={nav}>💡 Cara Pakai</a></nav>
-    <Link href="/studio" className="inline-flex min-h-12 items-center rounded-full bg-pb px-5 text-sm font-bold text-white shadow-md">📷 Mulai Foto</Link>
+     <a aria-current="page" href="#/" className={nav+"border-b-4 border-pb"}><I n="house" className="h-4 w-4"/> Beranda</a>
+     <a href="#/" onClick={go("vibe")} className={nav}><I n="layout-grid" className="h-4 w-4"/> Pilih Bingkai</a>
+     <a href="#/" onClick={go("cara")} className={nav}><I n="lightbulb" className="h-4 w-4"/> Cara Pakai</a></nav>
+    <Link href="/studio" className="inline-flex min-h-12 items-center gap-2 rounded-full bg-pb px-5 text-sm font-bold text-white shadow-md"><I n="camera" className="h-5 w-5"/> Mulai Foto</Link>
    </div>
    <nav aria-label="Menu utama" className="mx-auto mt-2 flex max-w-6xl gap-2 overflow-x-auto md:hidden">
     <a aria-current="page" href="#/" className={nav+"bg-navy text-white"}>Beranda</a>
@@ -67,8 +68,8 @@ export default function Home(){
        <motion.h1 initial={{scale:.85,opacity:0}} animate={{scale:1,opacity:1}} style={{fontSize:"clamp(2.4rem,11vw,4.5rem)"}} className="stroke relative font-display leading-none text-white">CAPTURE YOUR<br/>MOMENTS!</motion.h1></div>
       <p className="mx-auto mt-9 w-fit max-w-full -rotate-1 bg-cream px-4 py-2 font-hand text-2xl font-bold md:mx-0">Bikin foto seru dengan bingkai favoritmu</p>
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-       <Link href="/studio" className="inline-flex min-h-12 items-center justify-center rounded-full bg-pb px-8 text-base font-bold text-white shadow-lg">📷 Mulai Foto</Link>
-       <a href="#/" onClick={go("vibe")} className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-cream px-6 text-sm font-semibold text-cream">🖼 Lihat Bingkai</a></div>
+       <Link href="/studio" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-pb px-8 text-base font-bold text-white shadow-lg"><I n="camera" className="h-5 w-5"/> Mulai Foto</Link>
+       <a href="#/" onClick={go("vibe")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-cream px-6 text-sm font-semibold text-cream"><I n="images" className="h-5 w-5"/> Lihat Bingkai</a></div>
      </div>
      <div className="flex w-full items-start justify-center gap-2 md:order-1 md:w-1/2 md:gap-3">
       <Strip bg="#f6f0e1" pat n={2} label="After School Date" rot={-4} w={112} ph={ph} o={0}/>
@@ -85,7 +86,7 @@ export default function Home(){
       <Link href={`/studio?frame=${f.id}`} className="block rounded-xl bg-white p-3 shadow transition active:scale-95">
        <div style={{background:f.bg}} className="rounded border-2 border-ink p-1.5"><img src={ph(i)} alt="" className="aspect-[4/3] w-full rounded object-cover"/></div>
        <div className="mt-3 flex items-center justify-between gap-2"><div><div className="text-sm font-bold leading-tight">{f.name}</div><div className="text-xs opacity-70">{f.slots} foto</div></div>
-        <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-navy text-white">›</span></div></Link></li>))}
+        <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-navy text-white"><I n="chevron-right" className="h-5 w-5"/></span></div></Link></li>))}
     </ul>
    </section>
 
@@ -97,8 +98,8 @@ export default function Home(){
       <div className="mt-2 text-sm font-bold">{f.name}</div><div className="text-xs opacity-70">{f.slots} foto · ketuk untuk pakai</div></Link></li>))}</ul>
     :<p className="mt-4 text-center text-sm">Belum ada bingkai kolase. Pilih gambar bingkai dari galeri HP-mu, area fotonya terdeteksi otomatis.</p>}
     <div className="mt-4 flex flex-wrap justify-center gap-3">
-     <label className={lab+"border-2 border-dashed border-ink"}>{busy?"Memproses…":"＋ Tambah bingkai kolase"}<input type="file" accept="image/*" multiple disabled={busy} onChange={pickFrames} className="sr-only"/></label>
-     <label className={lab+"border-2 border-ink bg-white"}>🖼 Ganti foto contoh<input type="file" accept="image/*" multiple onChange={pickDemo} className="sr-only"/></label></div>
+     <label className={lab+"border-2 border-dashed border-ink"}>{busy?"Memproses…":<><I n="plus" className="mr-2 h-5 w-5"/>Tambah bingkai kolase</>}<input type="file" accept="image/*" multiple disabled={busy} onChange={pickFrames} className="sr-only"/></label>
+     <label className={lab+"border-2 border-ink bg-white"}><I n="images" className="mr-2 h-5 w-5"/>Ganti foto contoh<input type="file" accept="image/*" multiple onChange={pickDemo} className="sr-only"/></label></div>
     {msg&&<p role="status" className="mt-3 text-center text-sm font-semibold">{msg}</p>}
     <p className="mt-2 text-center text-xs opacity-80">Foto contoh dan bingkai hanya tersimpan di browser ini, tidak dikirim ke server.</p>
    </section>
@@ -106,14 +107,14 @@ export default function Home(){
    <section id="cara" className="mx-auto max-w-6xl scroll-mt-4 px-4 pb-12">
     <h2 className="text-center font-hand text-3xl font-bold">Cara pakai</h2>
     <ol className="mt-4 grid gap-3 md:grid-cols-3">{STEPS.map(([i,t,d],n)=>(
-     <li key={t} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow"><span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-pb text-xl text-white">{i}</span>
+     <li key={t} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow"><span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-pb text-white"><I n={i} className="h-6 w-6"/></span>
       <div><div className="font-bold">{n+1}. {t}</div><div className="text-sm opacity-80">{d}</div></div></li>))}</ol>
    </section>
   </main>
 
   <footer className="bg-navy px-4 py-5 text-center text-sm text-white">
-   <p>🔒 Fotomu diproses di perangkatmu dan tidak dikirim ke server.</p>
-   <p className="mt-1 opacity-90">@photobooth club · Good Frames, Good Memories ✦</p>
+   <p className="flex items-center justify-center gap-2"><I n="lock" className="h-4 w-4"/><span>Fotomu diproses di perangkatmu dan tidak dikirim ke server.</span></p>
+   <p className="mt-1 opacity-90">@photobooth club · Good Frames, Good Memories <I n="sparkles" className="h-4 w-4 align-[-2px]"/></p>
   </footer>
  </div>);
 }

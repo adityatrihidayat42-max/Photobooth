@@ -1,12 +1,13 @@
 import {useEffect,useRef,useState} from "react";
 import {motion} from "framer-motion";
+import I from "./Icon.jsx";
 import {FRAMES} from "./lib/frames";
 import {buildFrame} from "./lib/detect";
 import {compose} from "./lib/compose";
 
 const Link=({href,children,...p})=><a href={"#"+href} {...p}>{children}</a>;
 const STEPS=["Foto","Bingkai","Hasil"],Q={Tinggi:.95,Sedang:.8,Hemat:.6};
-const btn="min-h-12 rounded-full px-5 py-3 text-sm font-bold transition active:scale-95 disabled:opacity-40 ";
+const btn="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition active:scale-95 disabled:opacity-40 ";
 const pri=btn+"bg-pb text-white shadow-md",sec=btn+"border-2 border-ink bg-white",dark=btn+"bg-navy text-white";
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"bingkai";
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -40,7 +41,7 @@ const Prev=({f,photos})=>{const [u,setU]=useState(null);
  return u?<img src={u} alt={`Bingkai ${f.name}`} className="aspect-[3/5] w-full rounded bg-gray-100 object-contain"/>:<div className="aspect-[3/5] w-full animate-pulse rounded bg-gray-200"/>};
 const Seg=({label,opts,val,set,dis})=>(<div className="mt-3"><div className="mb-1 text-xs font-bold uppercase tracking-wide opacity-70">{label}</div>
  <div role="radiogroup" aria-label={label} className="grid grid-flow-col auto-cols-fr gap-2">{opts.map(([v,t])=>
-  <button key={v} role="radio" aria-checked={val===v} disabled={dis} onClick={()=>set(v)} className={`min-h-11 rounded-lg border-2 border-ink px-2 text-sm font-bold disabled:opacity-60 ${val===v?"bg-navy text-white":"bg-white"}`}>{val===v?"✓ ":""}{t}</button>)}</div></div>);
+  <button key={v} role="radio" aria-checked={val===v} disabled={dis} onClick={()=>set(v)} className={`min-h-11 rounded-lg border-2 border-ink px-2 text-sm font-bold disabled:opacity-60 ${val===v?"bg-navy text-white":"bg-white"}`}>{val===v&&<I n="check" className="mr-1 inline h-4 w-4"/>}{t}</button>)}</div></div>);
 
 export default function Studio(){
  const [step,setStep]=useState(1),[photos,setPhotos]=useState([]),[want,setWant]=useState(null),[fid,setFid]=useState(FRAMES[0].id),[cat,setCat]=useState("Semua"),[cam,setCam]=useState(false);
@@ -107,10 +108,10 @@ export default function Studio(){
  const Short=()=>short?<p className="mt-3 rounded-lg bg-yellow-100 p-3 text-sm">Bingkai ini punya {frame.slots} slot, tapi kamu baru punya {photos.length} foto, jadi foto akan diulang. <button onClick={()=>setStep(1)} className="font-bold underline">Tambah foto</button></p>:null;
 
  return(<main className="mx-auto max-w-3xl px-4 py-5 pb-8 lg:max-w-5xl">
-  <div className="flex items-center justify-between gap-2"><Link href="/" className="inline-flex min-h-11 items-center font-display text-xl">‹ BERANDA</Link>
+  <div className="flex items-center justify-between gap-2"><Link href="/" className="inline-flex min-h-11 items-center gap-1 font-display text-xl"><I n="chevron-left" className="h-6 w-6"/> BERANDA</Link>
    <nav aria-label="Langkah" className="flex gap-1">{STEPS.map((t,i)=><button key={t} onClick={()=>go(i+1)} aria-current={step===i+1?"step":undefined} className={`min-h-11 rounded-full px-3 text-xs font-bold ${step===i+1?"bg-pb text-white":"bg-navy/10"}`}>{i+1} {t}</button>)}</nav></div>
   <div aria-live="polite" role="status">{note&&<p className="mt-3 rounded-lg bg-green-100 p-3 text-sm text-green-900">{note}</p>}</div>
-  {err&&<p role="alert" className="mt-3 rounded-lg bg-red-100 p-3 text-sm text-red-800">⚠ {err}</p>}
+  {err&&<p role="alert" className="mt-3 rounded-lg bg-red-100 p-3 text-sm text-red-800"><I n="triangle-alert" className="mr-2 inline h-4 w-4 align-[-2px]"/>{err}</p>}
 
   {step===1&&!want&&<section className="mt-4"><p className="text-sm font-semibold">Langkah 1 · Pilih jumlah foto dulu. Setelah itu kamu memilih bingkai yang cocok.</p>
    <ul className="mt-3 grid grid-cols-2 gap-3">{[1,2,3,4].map(n=><li key={n}><button onClick={()=>chooseWant(n)} className="w-full rounded-xl bg-white p-4 shadow transition active:scale-95">
@@ -123,31 +124,31 @@ export default function Studio(){
     {cam&&!camReady&&<div className="absolute inset-0 grid place-items-center bg-navy/80 font-bold text-white">Menyalakan kamera…</div>}
     {count>0&&<div aria-hidden="true" className="absolute inset-0 grid place-items-center font-display text-9xl text-white [-webkit-text-stroke:3px_#14267a]">{count}</div>}</div>
    <div className="flex flex-wrap gap-3">
-    {!cam?<button onClick={()=>startCam()} className={pri}>📷 Mulai Kamera</button>:<>
+    {!cam?<button onClick={()=>startCam()} className={pri}><I n="camera" className="h-5 w-5"/> Mulai Kamera</button>:<>
      <button onClick={()=>snap()} disabled={busy||!camReady||need===0} className={pri}>Ambil Foto</button>
-     <button onClick={auto} disabled={busy||!camReady||need===0} className={dark}>⏱ Otomatis 3-2-1</button>
-     <button onClick={()=>startCam(facing==="user"?"environment":"user")} disabled={busy} className={sec}>🔄 Ganti Kamera</button></>}
-    <label className={sec+"inline-flex cursor-pointer items-center"}>📸 Kamera HP<input type="file" accept="image/*" capture="user" onChange={pick} className="sr-only"/></label>
-    <label className={sec+"inline-flex cursor-pointer items-center"}>🖼 Pilih dari Galeri<input type="file" accept="image/*" multiple onChange={pick} className="sr-only"/></label></div>
+     <button onClick={auto} disabled={busy||!camReady||need===0} className={dark}><I n="timer" className="h-5 w-5"/> Otomatis 3-2-1</button>
+     <button onClick={()=>startCam(facing==="user"?"environment":"user")} disabled={busy} className={sec}><I n="switch-camera" className="h-5 w-5"/> Ganti Kamera</button></>}
+    <label className={sec+"inline-flex cursor-pointer items-center"}><I n="smartphone" className="mr-2 h-5 w-5"/>Kamera HP<input type="file" accept="image/*" capture="user" onChange={pick} className="sr-only"/></label>
+    <label className={sec+"inline-flex cursor-pointer items-center"}><I n="images" className="mr-2 h-5 w-5"/>Pilih dari Galeri<input type="file" accept="image/*" multiple onChange={pick} className="sr-only"/></label></div>
    <p className="text-sm"><b>Mulai Kamera</b>: foto langsung di halaman ini · <b>Kamera HP</b>: buka aplikasi kamera bawaan · <b>Galeri</b>: pilih foto yang sudah ada.</p>
-   <p className="text-sm font-semibold">{photos.length} dari {want} foto{need>0?` · kurang ${need} foto`:" · siap pilih bingkai"} · 🔒 diproses di perangkatmu</p>
+   <p className="text-sm font-semibold">{photos.length} dari {want} foto{need>0?` · kurang ${need} foto`:" · siap pilih bingkai"} · <I n="lock" className="inline h-4 w-4 align-[-2px]"/> diproses di perangkatmu</p>
    <ul className="grid grid-cols-4 gap-2">{photos.map((p,i)=><li key={i} className="relative"><Thumb src={p} alt={`Foto ${i+1}`} className="aspect-square w-full rounded object-cover"/>
-    <button aria-label={`Hapus foto ${i+1}`} onClick={()=>setPhotos(photos.filter((_,j)=>j!==i))} className="absolute right-1 top-1 grid h-8 w-8 place-items-center rounded-full bg-pb text-sm text-white">✕</button></li>)}</ul>
-   <button disabled={need>0} onClick={()=>go(2)} className={dark+"w-full"}>{need>0?`Ambil ${need} foto lagi`:"Lanjut Pilih Bingkai ›"}</button></motion.section>}
+    <button aria-label={`Hapus foto ${i+1}`} onClick={()=>setPhotos(photos.filter((_,j)=>j!==i))} className="absolute right-1 top-1 grid h-8 w-8 place-items-center rounded-full bg-pb text-white"><I n="x" className="h-4 w-4"/></button></li>)}</ul>
+   <button disabled={need>0} onClick={()=>go(2)} className={dark+"w-full"}>{need>0?`Ambil ${need} foto lagi`:<>Lanjut Pilih Bingkai<I n="chevron-right" className="h-5 w-5"/></>}</button></motion.section>}
 
   {step===2&&<section className="mt-4">
    <p className="mb-2 text-sm font-semibold">Langkah 2 · Pilih bingkai untuk {want} foto.</p>
    <div className="flex gap-2 overflow-x-auto pb-2">{cats.map(c=><button key={c} onClick={()=>setCat(c)} aria-pressed={cat===c} className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-semibold ${cat===c?"bg-navy text-white":"bg-white"}`}>{c}</button>)}</div>
-   <label className="mt-2 inline-flex min-h-11 cursor-pointer items-center rounded-full border-2 border-dashed border-ink px-4 text-sm font-bold">＋ Tambah bingkai dari galeri<input type="file" accept="image/*" multiple onChange={addFrames} className="sr-only"/></label>
+   <label className="mt-2 inline-flex min-h-11 cursor-pointer items-center rounded-full border-2 border-dashed border-ink px-4 text-sm font-bold"><I n="plus" className="mr-2 h-5 w-5"/>Tambah bingkai dari galeri<input type="file" accept="image/*" multiple onChange={addFrames} className="sr-only"/></label>
    <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">{list.map(f=><li key={f.id}><div className={`rounded-xl bg-white p-3 shadow ${fid===f.id?"ring-4 ring-pb":""}`}>
     <button onClick={()=>setFid(f.id)} aria-pressed={fid===f.id} className="block w-full text-left">
      <Prev f={f} photos={photos}/>
-     <div className="mt-2 text-sm font-bold">{fid===f.id&&"✓ "}{f.name}<div className="text-xs font-normal opacity-70">{f.cat} · {f.slots} foto</div></div></button>
+     <div className="mt-2 text-sm font-bold">{fid===f.id&&<I n="check" className="mr-1 inline h-4 w-4 text-pb"/>}{f.name}<div className="text-xs font-normal opacity-70">{f.cat} · {f.slots} foto</div></div></button>
     {f.custom&&<button onClick={()=>setCustom(custom.filter(c=>c.id!==f.id))} className="mt-1 min-h-11 text-xs font-semibold text-red-700 underline">Hapus bingkai</button>}</div></li>)}</ul>
    {list.length===0&&<p className="mt-4 rounded-lg bg-white p-3 text-sm">Belum ada bingkai untuk {want} foto{cat!=="Semua"?" di kategori ini":""}. Tambahkan bingkai dari galeri, atau <button onClick={()=>{setCat("Semua");setStep(1);setWant(null)}} className="font-bold underline">ubah jumlah foto</button>.</p>}
    <SlotRow n={frame.slots} photos={photos}/>
    <Short/>
-   <div className="mt-4 flex gap-3"><button onClick={()=>setStep(1)} className={sec}>‹ Foto</button><button onClick={()=>go(3)} className={pri+"flex-1"}>Lihat Hasil ›</button></div></section>}
+   <div className="mt-4 flex gap-3"><button onClick={()=>setStep(1)} className={sec}><I n="chevron-left" className="h-5 w-5"/>Foto</button><button onClick={()=>go(3)} className={pri+"flex-1"}>Lihat Hasil<I n="chevron-right" className="h-5 w-5"/></button></div></section>}
 
   {step===3&&<section className="mt-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
    <div className="text-center"><h1 className="mb-2 font-display text-xl">HASIL · {frame.name}</h1>
@@ -163,13 +164,13 @@ export default function Studio(){
     <p className="mt-1 text-xs opacity-80">{fmt==="png"?"Kualitas hanya berlaku untuk JPEG. PNG selalu kualitas penuh.":"Tinggi = file lebih besar, Hemat = file lebih kecil."}</p>
     {dims[0]>0&&<p className="mt-3 text-xs opacity-80">Hasil: {dims[0]*scale} × {dims[1]*scale} px · foto diproses di perangkatmu</p>}
     <div className="mt-4 grid gap-3">
-     <button onClick={exportImg} disabled={exporting||rendering} className={pri}>{exporting?"Menyiapkan hasil…":`⬇ Unduh ${fmt==="png"?"PNG":"JPEG"}`}</button>
-     <button onClick={copyPng} disabled={exporting||rendering} className={sec}>Salin sebagai PNG</button></div>
+     <button onClick={exportImg} disabled={exporting||rendering} className={pri}>{exporting?"Menyiapkan hasil…":<><I n="download" className="h-5 w-5"/>Unduh {fmt==="png"?"PNG":"JPEG"}</>}</button>
+     <button onClick={copyPng} disabled={exporting||rendering} className={sec}><I n="copy" className="h-5 w-5"/>Salin sebagai PNG</button></div>
     <Short/>
     <div className="mt-4 grid grid-cols-2 gap-3 border-t pt-4"><button onClick={()=>setStep(2)} className={sec}>Ganti bingkai</button><button onClick={()=>setStep(1)} className={sec}>Ganti foto</button></div>
     {downloaded&&<button onClick={reset} className={dark+"mt-3 w-full"}>Buat foto baru</button>}
     {!downloaded&&<button onClick={reset} className="mt-3 min-h-11 w-full text-sm font-semibold text-red-700 underline">Mulai ulang (hapus semua foto)</button>}
    </div></section>}
- <p className="mt-8 text-center text-xs opacity-80">🔒 Foto diproses di perangkatmu dan hilang saat tab ditutup. Bingkai tambahan tersimpan di browser ini.</p>
+ <p className="mt-8 flex items-center justify-center gap-2 text-center text-xs opacity-80"><I n="lock" className="h-4 w-4"/><span>Foto diproses di perangkatmu dan hilang saat tab ditutup. Bingkai tambahan tersimpan di browser ini.</span></p>
  </main>);
 }
